@@ -36,13 +36,36 @@ interface Product {
 }
 
 const Cart: React.FC = () => {
-  const {
-    increment,
-    decrement,
-    products,
-    totalItensInCart,
-    cartTotal,
-  } = useCart();
+  const { increment, decrement, products } = useCart();
+
+  function handleIncrement(id: string): void {
+    // TODO
+    increment(id);
+  }
+
+  function handleDecrement(id: string): void {
+    // TODO
+    decrement(id);
+  }
+
+  const totalItensInCart = React.useMemo(() => {
+    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    const totalItems = products.reduce(
+      (acc, product) => acc + product.quantity,
+      0,
+    );
+    return totalItems;
+  }, [products]);
+
+  const cartTotal = React.useMemo(() => {
+    // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
+    const totalPrice = products.reduce(
+      (acc, product) => acc + product.quantity * product.price,
+      0,
+    );
+
+    return formatValue(totalPrice);
+  }, [products]);
 
   return (
     <Container>
@@ -66,9 +89,10 @@ const Cart: React.FC = () => {
 
                   <TotalContainer>
                     <ProductQuantity>
-                      {item.quantity > 1
+                      {/* {item.quantity > 1
                         ? `${item.quantity} pieces`
-                        : `${item.quantity} piece`}
+                        : `${item.quantity} piece`} */}
+                      {`${item.quantity}x`}
                     </ProductQuantity>
 
                     <ProductPrice>
@@ -80,13 +104,13 @@ const Cart: React.FC = () => {
               <ActionContainer>
                 <ActionButton
                   testID={`increment-${item.id}`}
-                  onPress={() => increment(item.id)}
+                  onPress={() => handleIncrement(item.id)}
                 >
                   <FeatherIcon name="plus" color="#E83F5B" size={16} />
                 </ActionButton>
                 <ActionButton
                   testID={`decrement-${item.id}`}
-                  onPress={() => decrement(item.id)}
+                  onPress={() => handleDecrement(item.id)}
                 >
                   <FeatherIcon name="minus" color="#E83F5B" size={16} />
                 </ActionButton>
@@ -97,8 +121,8 @@ const Cart: React.FC = () => {
       </ProductContainer>
       <TotalProductsContainer>
         <FeatherIcon name="shopping-cart" color="#fff" size={24} />
-        <TotalProductsText>{`${totalItensInCart()} items`}</TotalProductsText>
-        <SubtotalValue>{cartTotal()}</SubtotalValue>
+        <TotalProductsText>{`${totalItensInCart} itens`}</TotalProductsText>
+        <SubtotalValue>{cartTotal}</SubtotalValue>
       </TotalProductsContainer>
     </Container>
   );

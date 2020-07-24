@@ -23,8 +23,8 @@ interface CartContext {
   addToCart(item: Omit<Product, 'quantity'>): void;
   increment(id: string): void;
   decrement(id: string): void;
-  totalItensInCart(): number;
-  cartTotal(): string;
+  totalItensInCart: number;
+  cartTotal: string;
 }
 
 const CartContext = createContext<CartContext>({});
@@ -123,7 +123,7 @@ const CartProvider: React.FC = ({ children }) => {
     [products],
   );
 
-  const totalItensInCart = useCallback(() => {
+  const totalItensInCart = React.useMemo(() => {
     // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
     const totalItems = products.reduce(
       (acc, product) => acc + product.quantity,
@@ -132,7 +132,7 @@ const CartProvider: React.FC = ({ children }) => {
     return totalItems;
   }, [products]);
 
-  const cartTotal = useCallback(() => {
+  const cartTotal = React.useMemo(() => {
     // TODO RETURN THE SUM OF THE QUANTITY OF THE PRODUCTS IN THE CART
     const totalPrice = products.reduce(
       (acc, product) => acc + product.quantity * product.price,
